@@ -2,9 +2,11 @@ package com.example.texttwist;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.animation.Animation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,14 +15,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 
-public class PlayscreenController {
+public class PlayscreenController implements Initializable {
 
     @FXML
     private Label circleOne;
@@ -85,22 +90,200 @@ public class PlayscreenController {
     private char[] letters;
     private Trie allWords;
     private Trie possibleWords;
-    private int timer = 15;
+    private int timer = 60; // default seconds for a timed round
     private int score = 0;
+
+    // Flag to indicate if the current game should run without a countdown clock
+    private boolean isUntimed = false;
+
+    // Round management
+    private int currentRound = 1;
+    private String sixLetterWord = ""; // The target 6-letter word for this round
+    private boolean foundSixLetterWord = false;
 
     Timeline timeline;
 
-    public void setLetters() throws FileNotFoundException {
-        Random rand = new Random();
-        letters = new char[6];
-        String weightedAlph = "aaaaaaaaeeeeeeeeeiiiiiiiooooooouuu" + "bbccddffgghhjjkkllmmnnpqrrssttvvwwxxyyz";
-        for (int i = 0; i < letters.length; i++) {
-            letters[i] = weightedAlph.charAt(rand.nextInt(weightedAlph.length()));
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // Focus the AnchorPane to receive key events
+        if (foundWords != null && foundWords.getScene() != null) {
+            foundWords.getScene().getRoot().requestFocus();
         }
+    }
+
+    @FXML
+    public void handleKeyPressed(KeyEvent event) {
+        KeyCode code = event.getCode();
+        
+        if (code == KeyCode.BACK_SPACE) {
+            handleBackspace();
+        } else if (code == KeyCode.ENTER) {
+            enter(new ActionEvent());
+        } else if (code.isLetterKey()) {
+            String letter = code.getName().toLowerCase();
+            handleLetterInput(letter.charAt(0));
+        }
+        event.consume();
+    }
+
+    private void handleBackspace() {
+        if (userWord.length() > 0) {
+            // Remove the last letter from userWord
+            char lastChar = userWord.charAt(userWord.length() - 1);
+            userWord = userWord.substring(0, userWord.length() - 1);
+            
+            // Find the last filled position and clear it
+            if (!letterSixAv) {
+                letterSix.setText("");
+                letterSixAv = true;
+                // Restore the letter to its original circle
+                restoreLetterToCircle(lastChar);
+            } else if (!letterFiveAv) {
+                letterFive.setText("");
+                letterFiveAv = true;
+                restoreLetterToCircle(lastChar);
+            } else if (!letterFourAv) {
+                letterFour.setText("");
+                letterFourAv = true;
+                restoreLetterToCircle(lastChar);
+            } else if (!letterThreeAv) {
+                letterThree.setText("");
+                letterThreeAv = true;
+                restoreLetterToCircle(lastChar);
+            } else if (!letterTwoAv) {
+                letterTwo.setText("");
+                letterTwoAv = true;
+                restoreLetterToCircle(lastChar);
+            } else if (!letterOneAv) {
+                letterOne.setText("");
+                letterOneAv = true;
+                restoreLetterToCircle(lastChar);
+            }
+        }
+    }
+
+    private void restoreLetterToCircle(char letter) {
+        // Find which circle this letter belongs to and restore it
+        for (int i = 0; i < letters.length; i++) {
+            if (letters[i] == letter) {
+                switch (i) {
+                    case 0:
+                        if (!circleOneAv) {
+                            circleOne.setText(Character.toString(letter).toUpperCase());
+                            circleOneAv = true;
+                            return;
+                        }
+                        break;
+                    case 1:
+                        if (!circleTwoAv) {
+                            circleTwo.setText(Character.toString(letter).toUpperCase());
+                            circleTwoAv = true;
+                            return;
+                        }
+                        break;
+                    case 2:
+                        if (!circleThreeAv) {
+                            circleThree.setText(Character.toString(letter).toUpperCase());
+                            circleThreeAv = true;
+                            return;
+                        }
+                        break;
+                    case 3:
+                        if (!circleFourAv) {
+                            circleFour.setText(Character.toString(letter).toUpperCase());
+                            circleFourAv = true;
+                            return;
+                        }
+                        break;
+                    case 4:
+                        if (!circleFiveAv) {
+                            circleFive.setText(Character.toString(letter).toUpperCase());
+                            circleFiveAv = true;
+                            return;
+                        }
+                        break;
+                    case 5:
+                        if (!circleSixAv) {
+                            circleSix.setText(Character.toString(letter).toUpperCase());
+                            circleSixAv = true;
+                            return;
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
+    private void handleLetterInput(char inputChar) {
+        // Find if this letter is available in any circle
+        for (int i = 0; i < letters.length; i++) {
+            if (letters[i] == inputChar) {
+                switch (i) {
+                    case 0:
+                        if (circleOneAv) {
+                            pressLetterOne(null);
+                            return;
+                        }
+                        break;
+                    case 1:
+                        if (circleTwoAv) {
+                            pressLetterTwo(null);
+                            return;
+                        }
+                        break;
+                    case 2:
+                        if (circleThreeAv) {
+                            pressLetterThree(null);
+                            return;
+                        }
+                        break;
+                    case 3:
+                        if (circleFourAv) {
+                            pressLetterFour(null);
+                            return;
+                        }
+                        break;
+                    case 4:
+                        if (circleFiveAv) {
+                            pressLetterFive(null);
+                            return;
+                        }
+                        break;
+                    case 5:
+                        if (circleSixAv) {
+                            pressLetterSix(null);
+                            return;
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
+    public void setLetters() throws FileNotFoundException {
+        // Generate letters until we find a combination that can form at least one 6-letter word
+        boolean hasSixLetterWord = false;
+        int attempts = 0;
+        final int MAX_ATTEMPTS = 1000; // Prevent infinite loop
+        
+        while (!hasSixLetterWord && attempts < MAX_ATTEMPTS) {
+            attempts++;
+            generateRandomLetters();
+            hasSixLetterWord = checkForSixLetterWord();
+        }
+        
+        if (!hasSixLetterWord) {
+            // Fallback - use a known good combination
+            letters = new char[]{'a', 'r', 't', 'i', 's', 't'}; // makes "artist"
+        }
+        
+        foundSixLetterWord = false; // Reset for this round
         foundWords.setEditable(false);
         scoreLabel.setText("Score: " + score);
 
-        timeLabel.setText("Time Remaining: " + timer);
+        // initialise timer
+        timer = isUntimed ? 0 : 60;
+        timeLabel.setText(isUntimed ? "Untimed Mode" : formatTime(timer));
         circleOne.setText(Character.toString(letters[0]).toUpperCase());
         circleTwo.setText(Character.toString(letters[1]).toUpperCase());
         circleThree.setText(Character.toString(letters[2]).toUpperCase());
@@ -122,8 +305,12 @@ public class PlayscreenController {
 
         getWords();
         missingWords();
-        startRound();
-
+        // Start timer only for timed games
+        if (isUntimed) {
+            timeLabel.setText("Untimed Mode");
+        } else {
+            startRound();
+        }
     }
     public void missingWords() {
         for (String word : remainingWords) {
@@ -144,32 +331,46 @@ public class PlayscreenController {
             }
         }
     }
+    private String formatTime(int seconds) {
+        int m = seconds / 60;
+        int s = seconds % 60;
+        return String.format("Time: %02d:%02d", m, s);
+    }
     public void startRound() {
+        // Ensure the scene can receive keyboard input
+        if (foundWords.getScene() != null) {
+            foundWords.getScene().getRoot().requestFocus();
+        }
+        
+        // Stop any existing timeline to prevent multiple timers running
+        if (timeline != null) {
+            timeline.stop();
+        }
+        
         timeline = new Timeline(
                 new KeyFrame(Duration.seconds(1),
                         event -> {
                             --timer;
-                            timeLabel.setText("Time remaining: " + timer);
+                            timeLabel.setText(formatTime(timer));
                             if (timer <= 0) {
                                 timeline.stop();
-                                FXMLLoader loader = new FXMLLoader(getClass().getResource("scorescreen.fxml"));
-                                Parent root = null;
-                                try {
-                                    root = loader.load();
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
+                                
+                                // Check if 6-letter word was found
+                                if (foundSixLetterWord) {
+                                    // Advance to next round since 6-letter word was found
+                                    try {
+                                        advanceToNextRound();
+                                    } catch (FileNotFoundException ex) {
+                                        throw new RuntimeException(ex);
+                                    }
+                                } else {
+                                    // Game over - didn't find 6-letter word in time
+                                    endGame();
                                 }
-                                ScorescreenController controller = loader.getController();
-                                controller.displayScore(score);
-                                root.setStyle("-fx-background-color: rgba(24,117,193,255);");
-                                Stage stage = (Stage) timeLabel.getScene().getWindow();
-                                Scene myScene = new Scene(root);
-                                stage.setScene(myScene);
-                                stage.show();
                             }
                         })
         );
-        timeline.setCycleCount(120);
+        timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
     }
 
@@ -182,11 +383,17 @@ public class PlayscreenController {
                     score += userWord.length() * 500;
                     scoreLabel.setText("Score: " + score);
 
+                    // Check if this is the 6-letter word
+                    if (userWord.length() == 6) {
+                        foundSixLetterWord = true;
+                        warningLabel.setText("6-letter word found! Round will end when timer expires.");
+                    } else {
+                        warningLabel.setText("Valid word!");
+                    }
 
                     remainingWords.remove(userWord);
                     removeSpaces(userWord);
                     foundWords.appendText(userWord + " \n");
-                    warningLabel.setText("Valid word!");
                 } else {
                     warningLabel.setText("You have already used this word!");
                 }
@@ -404,6 +611,7 @@ public class PlayscreenController {
                 letterFourAv = false;
                 letterFour.setText(Character.toString(letters[2]).toUpperCase());
                 circleThree.setText("");
+                circleThreeAv = false;
             } else if (letterFiveAv) {
                 userWord = userWord + Character.toString(letters[2]);
                 letterFiveAv = false;
@@ -544,6 +752,163 @@ public class PlayscreenController {
                 circleSixAv = false;
             }
         }
+    }
+
+    /**
+     * Shuffle the six available letters to help the user spot new words.
+     * Keeps the same letters but rearranges their order, then resets the UI just like Clear.
+     */
+    @FXML
+    public void shuffle(ActionEvent event) {
+        // Randomly reorder letters array
+        List<Character> temp = new ArrayList<>();
+        for (char c : letters) {
+            temp.add(c);
+        }
+        Collections.shuffle(temp);
+        for (int i = 0; i < letters.length; i++) {
+            letters[i] = temp.get(i);
+        }
+
+        // Reset any current word selection and refresh the display
+        userWord = "";
+        clear(event);
+    }
+
+    /**
+     * Called by the TextTwistController when the user selects the Untimed option.
+     */
+    public void setUntimed(boolean untimed) {
+        this.isUntimed = untimed;
+    }
+
+    /**
+     * Generate 6 random letters using weighted distribution
+     */
+    private void generateRandomLetters() {
+        Random rand = new Random();
+        letters = new char[6];
+        // Weighted alphabet based on Scrabble letter frequencies for more realistic letter variety
+        String weightedAlph = "aaaaaaaaa"  + // 9 A
+                             "bb"        + // 2 B
+                             "cc"        + // 2 C
+                             "dddd"      + // 4 D
+                             "eeeeeeeeeeee" + // 12 E
+                             "ff"        + // 2 F
+                             "ggg"       + // 3 G
+                             "hh"        + // 2 H
+                             "iiiiiiiii" + // 9 I
+                             "j"         + // 1 J
+                             "k"         + // 1 K
+                             "llll"      + // 4 L
+                             "mm"        + // 2 M
+                             "nnnnnn"    + // 6 N
+                             "oooooooo"  + // 8 O
+                             "pp"        + // 2 P
+                             "q"         + // 1 Q
+                             "rrrrrr"    + // 6 R
+                             "ssss"      + // 4 S
+                             "tttttt"    + // 6 T
+                             "uuuu"      + // 4 U
+                             "vv"        + // 2 V
+                             "ww"        + // 2 W
+                             "x"         + // 1 X
+                             "yy"        + // 2 Y
+                             "z";          // 1 Z
+        for (int i = 0; i < letters.length; i++) {
+            letters[i] = weightedAlph.charAt(rand.nextInt(weightedAlph.length()));
+        }
+    }
+
+    /**
+     * Check if the current letter combination can form at least one 6-letter word
+     */
+    private boolean checkForSixLetterWord() throws FileNotFoundException {
+        String chars = "";
+        for (char c : letters) {
+            chars += c;
+        }
+        
+        // Load dictionary if not already loaded
+        if (allWords == null) {
+            allWords = new Trie();
+            allWords.loadFromFile("ospd.txt");
+        }
+        
+        // Build possible words for this letter combination
+        Trie tempPossibleWords = new Trie();
+        Stack<String> wordStack = new Stack<>();
+        buildPossibleWords(chars, wordStack, allWords, tempPossibleWords);
+        
+        // Check if any 6-letter words exist
+        String words = tempPossibleWords.toString();
+        Scanner scnr = new Scanner(words);
+        while (scnr.hasNext()) {
+            String word = scnr.next();
+            if (word.length() == 6) {
+                sixLetterWord = word; // Store the target word for this round
+                scnr.close();
+                return true;
+            }
+        }
+        scnr.close();
+        return false;
+    }
+
+    /**
+     * Advance to the next round with new letters
+     */
+    private void advanceToNextRound() throws FileNotFoundException {
+        if (timeline != null) {
+            timeline.stop();
+        }
+        
+        currentRound++;
+        timer = 60; // Reset timer for next round
+        resetDisplayForNewRound();
+        setLetters(); // This will generate new letters that guarantee a 6-letter word
+         
+         // Reset timer if it's a timed game
+         if (!isUntimed) {
+             startRound();
+         }
+         
+         // Ensure focus is maintained for keyboard input
+         if (foundWords.getScene() != null) {
+             foundWords.getScene().getRoot().requestFocus();
+         }
+    }
+
+    /**
+     * Reset UI elements for a new round
+     */
+    private void resetDisplayForNewRound() {
+        foundWords.setText("Found Words:\n");
+        threeWords.setText("3 Letter Words:\n       \n       \n       \n");
+        fourWords.setText("4 Letter Words:\n         \n         \n         \n");
+        fiveWords.setText("5 Letter Words:\n           \n           \n           \n");
+        sixWords.setText("6 Letter Words:\n             \n             \n             \n");
+        warningLabel.setText("");
+    }
+
+    /**
+     * End the game and show score screen
+     */
+    private void endGame() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("scorescreen.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        ScorescreenController controller = loader.getController();
+        controller.displayScore(score);
+        root.setStyle("-fx-background-color: rgba(24,117,193,255);");
+        Stage stage = (Stage) scoreLabel.getScene().getWindow();
+        Scene myScene = new Scene(root);
+        stage.setScene(myScene);
+        stage.show();
     }
 }
 

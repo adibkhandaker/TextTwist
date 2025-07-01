@@ -4,11 +4,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
+<?import java.net.URL?>
 
-<AnchorPane prefHeight="491.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.texttwist.PlayscreenController">
+<AnchorPane prefHeight="491.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.texttwist.PlayscreenController" onKeyPressed="#handleKeyPressed" focusTraversable="true">
    <children>
       <Circle fill="DODGERBLUE" layoutX="61.43" layoutY="373.0" onMouseClicked="#pressLetterOne" radius="50.0" stroke="BLACK" strokeType="INSIDE" />
       <Label fx:id="circleOne" layoutX="52.0" layoutY="351.0" text="L" textFill="WHITE">
@@ -88,8 +90,12 @@
             <Font size="36.0" />
          </font>
       </Label>
-      <Button layoutX="263.0" layoutY="436.0" mnemonicParsing="false" onAction="#enter" text="Enter" />
-      <Button layoutX="374.0" layoutY="436.0" mnemonicParsing="false" onAction="#clear" text="Clear" />
+      <!-- Centered control bar -->
+      <HBox layoutY="436.0" prefWidth="680.0" alignment="CENTER" spacing="20.0">
+         <Button onAction="#shuffle" text="Shuffle" styleClass="button control-button" />
+         <Button onAction="#enter" text="Enter" styleClass="button success-button" />
+         <Button onAction="#clear" text="Clear" styleClass="button control-button" />
+      </HBox>
       <Label fx:id="warningLabel" layoutX="9.0" layoutY="198.0" prefHeight="17.0" prefWidth="283.0">
          <font>
             <Font size="11.0" />
@@ -114,4 +120,7 @@
          </font>
       </Label>
    </children>
+   <stylesheets>
+      <URL value="@styles.css" />
+   </stylesheets>
 </AnchorPane>

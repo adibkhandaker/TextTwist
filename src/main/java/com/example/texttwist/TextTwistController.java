@@ -34,4 +34,18 @@ public class TextTwistController {
 
     }
 
+    @FXML
+    public void untimedButton(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("playscreen.fxml"));
+        root = loader.load();
+        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Scene myScene = new Scene(root);
+        stage.setScene(myScene);
+        stage.show();
+        PlayscreenController controller = loader.getController();
+        controller.setUntimed(true);
+        controller.setLetters();
+        controller.clear(event);
+    }
+
 }

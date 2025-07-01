@@ -1,0 +1,103 @@
+/* Global stylesheet for TextTwist – subtle modern refresh */
+
+/* --- Enhanced Global Aesthetics -------------------------------------------------- */
+
+/* Brighter soft gradient background */
+AnchorPane {
+    -fx-background-color: linear-gradient(to bottom, #eaf2ff 0%, #f5f9ff 50%, #ffffff 100%);
+}
+
+/* Default label typography & colour */
+Label {
+    -fx-font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+    -fx-text-fill: #37474f; /* dark slate */
+}
+
+/* General button styling */
+.button {
+    -fx-background-color: linear-gradient(to bottom, #4f9dff 0%, #3075ff 100%);
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 6, 0, 0, 2);
+    -fx-cursor: hand;
+    -fx-padding: 10 28 10 28;
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom, #5fa7ff 0%, #3980ff 100%);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.28), 8, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.button:pressed {
+    -fx-background-color: #2e6bf2;
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+}
+
+/* Text areas: subtle rounded border */
+.text-area {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #cfd8dc;
+    -fx-control-inner-background: #ffffff;
+    -fx-padding: 6 8 6 8;
+    -fx-font-size: 14px;
+}
+
+/* Circles that already have fill set keep their fill; only add soft shadow for depth */
+.circle {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.28), 5, 0, 0, 2);
+}
+
+/* Blue letter circles – override default fill to fresher gradient */
+.circle[fill="DODGERBLUE"],
+.circle[fill="#72abe1"] {
+    -fx-fill: linear-gradient(to bottom, #64b5ff 0%, #1e88e5 100%);
+    -fx-stroke: white;
+    -fx-stroke-width: 2;
+}
+
+/* White text inside coloured circles */
+.label:parent .circle {
+    -fx-text-fill: white;
+}
+
+/* --- Misc ----------------------------------------------------------------------- */
+.text-area:focused {
+    -fx-border-color: #64b5ff;
+    -fx-border-width: 2;
+}
+
+/* Headline labels (title on score screen) */
+.headline {
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #263238;
+}
+
+/* Secondary subtle grey */
+.subtle {
+    -fx-text-fill: #607d8b;
+}
+
+/* Variant buttons */
+.success-button {
+    -fx-background-color: linear-gradient(to bottom, #43c465 0%, #2e9b4b 100%);
+}
+.success-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #4ddc70 0%, #39b156 100%);
+}
+
+.control-button {
+    -fx-background-color: linear-gradient(to bottom, #607d8b 0%, #546e7a 100%);
+}
+.control-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #748c99 0%, #607d8b 100%);
+} 
