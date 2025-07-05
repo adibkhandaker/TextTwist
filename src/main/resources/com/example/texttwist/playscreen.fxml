@@ -10,10 +10,10 @@
 <?import javafx.scene.text.Font?>
 <?import java.net.URL?>
 
-<AnchorPane prefHeight="491.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.texttwist.PlayscreenController" onKeyPressed="#handleKeyPressed" focusTraversable="true">
+<AnchorPane prefHeight="491.0" prefWidth="680.0" styleClass="playscreen" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.texttwist.PlayscreenController" onKeyPressed="#handleKeyPressed" focusTraversable="true">
    <children>
       <Circle fill="DODGERBLUE" layoutX="61.43" layoutY="373.0" onMouseClicked="#pressLetterOne" radius="50.0" stroke="BLACK" strokeType="INSIDE" />
-      <Label fx:id="circleOne" layoutX="52.0" layoutY="351.0" text="L" textFill="WHITE">
+      <Label fx:id="circleOne" layoutX="52.0" layoutY="351.0" text="L" textFill="WHITE" styleClass="circle-label">
          <font>
             <Font size="36.0" />
          </font>
@@ -23,27 +23,27 @@
       <Circle fill="DODGERBLUE" layoutX="395.72" layoutY="371.0" onMouseClicked="#pressLetterFour" radius="50.0" stroke="BLACK" strokeType="INSIDE" />
       <Circle fill="DODGERBLUE" layoutX="507.15" layoutY="373.0" onMouseClicked="#pressLetterFive" radius="50.0" stroke="BLACK" strokeType="INSIDE" />
       <Circle fill="DODGERBLUE" layoutX="618.58" layoutY="371.0" onMouseClicked="#pressLetterSix" radius="50.0" stroke="BLACK" strokeType="INSIDE" />
-      <Label fx:id="circleTwo" layoutX="163.0" layoutY="349.0" text="L" textFill="WHITE">
+      <Label fx:id="circleTwo" layoutX="163.0" layoutY="349.0" text="L" textFill="WHITE" styleClass="circle-label">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <Label fx:id="circleThree" layoutX="275.0" layoutY="349.0" text="L" textFill="WHITE">
+      <Label fx:id="circleThree" layoutX="275.0" layoutY="349.0" text="L" textFill="WHITE" styleClass="circle-label">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <Label fx:id="circleFour" layoutX="386.0" layoutY="349.0" text="L" textFill="WHITE">
+      <Label fx:id="circleFour" layoutX="386.0" layoutY="349.0" text="L" textFill="WHITE" styleClass="circle-label">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <Label fx:id="circleFive" layoutX="498.0" layoutY="349.0" text="L" textFill="WHITE">
+      <Label fx:id="circleFive" layoutX="498.0" layoutY="349.0" text="L" textFill="WHITE" styleClass="circle-label">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <Label fx:id="circleSix" layoutX="609.0" layoutY="349.0" text="L" textFill="WHITE">
+      <Label fx:id="circleSix" layoutX="609.0" layoutY="349.0" text="L" textFill="WHITE" styleClass="circle-label">
          <font>
             <Font size="36.0" />
          </font>
@@ -96,19 +96,40 @@
          <Button onAction="#enter" text="Enter" styleClass="button success-button" />
          <Button onAction="#clear" text="Clear" styleClass="button control-button" />
       </HBox>
-      <Label fx:id="warningLabel" layoutX="9.0" layoutY="198.0" prefHeight="17.0" prefWidth="283.0">
+      <Label fx:id="warningLabel" layoutX="9.0" layoutY="198.0" prefHeight="17.0" prefWidth="283.0" styleClass="warning-label">
          <font>
-            <Font size="11.0" />
+            <Font size="12.0" />
          </font></Label>
-      <Label layoutX="11.0" layoutY="6.0" text="3-Letters" />
-      <Label layoutX="126.0" layoutY="6.0" text="4-Letters" />
-      <Label layoutX="241.0" layoutY="6.0" text="5-Letters" />
-      <Label layoutX="359.0" layoutY="6.0" prefHeight="17.0" prefWidth="52.0" text="6-Letters" />
-      <TextArea fx:id="foundWords" layoutX="461.0" layoutY="14.0" prefHeight="184.0" prefWidth="198.0" />
-      <TextArea fx:id="threeWords" layoutX="9.0" layoutY="25.0" prefHeight="172.0" prefWidth="70.0" />
-      <TextArea fx:id="fourWords" layoutX="117.0" layoutY="25.0" prefHeight="172.0" prefWidth="70.0" />
-      <TextArea fx:id="fiveWords" layoutX="232.0" layoutY="25.0" prefHeight="172.0" prefWidth="70.0" />
-      <TextArea fx:id="sixWords" layoutX="350.0" layoutY="25.0" prefHeight="172.0" prefWidth="70.0" />
+      <Label layoutX="11.0" layoutY="6.0" text="3-Letters" styleClass="subtle">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="126.0" layoutY="6.0" text="4-Letters" styleClass="subtle">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="241.0" layoutY="6.0" text="5-Letters" styleClass="subtle">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label layoutX="359.0" layoutY="6.0" prefHeight="17.0" prefWidth="52.0" text="6-Letters" styleClass="subtle">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+             </Label>
+       <Label layoutX="461.0" layoutY="6.0" text="Found Words" styleClass="subtle">
+          <font>
+             <Font name="System Bold" size="12.0" />
+          </font>
+       </Label>
+       <TextArea fx:id="foundWords" layoutX="461.0" layoutY="25.0" prefHeight="173.0" prefWidth="198.0" />
+              <TextArea fx:id="threeWords" layoutX="9.0" layoutY="25.0" prefHeight="172.0" prefWidth="70.0" styleClass="word-list" />
+        <TextArea fx:id="fourWords" layoutX="117.0" layoutY="25.0" prefHeight="172.0" prefWidth="70.0" styleClass="word-list" />
+        <TextArea fx:id="fiveWords" layoutX="232.0" layoutY="25.0" prefHeight="172.0" prefWidth="70.0" styleClass="word-list" />
+        <TextArea fx:id="sixWords" layoutX="350.0" layoutY="25.0" prefHeight="172.0" prefWidth="70.0" styleClass="word-list" />
       <Label fx:id="timeLabel" layoutX="9.0" layoutY="462.0" text="Label">
          <font>
             <Font size="19.0" />

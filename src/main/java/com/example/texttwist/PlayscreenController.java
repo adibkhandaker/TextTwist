@@ -317,7 +317,7 @@ public class PlayscreenController implements Initializable {
             String spaces = "";
             int length = word.length();
             for (int i = 0; i < length; i++) {
-                spaces += "_ ";
+                spaces += "■ ";
             }
             spaces += "\n";
             if (length == 3) {
